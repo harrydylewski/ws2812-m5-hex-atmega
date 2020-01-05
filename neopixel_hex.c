@@ -1,13 +1,13 @@
 #include "neopixel_hex.h"
 
-void hex_writeOutmostCircle(uint8_t *color, neopixel_hex hex )
+void hex_writeOutmostCircle(uint8_t *color, neopixel_hex *hex )
 {
 	uint8_t x,y;
 
 	for(y=0;y<3;y++)
 	{
 
-		for(x=4;x>0x;x--)
+		for(x=4;x>0;x--)
 		{
 			hex->first[x][y]=color[y];
 			hex->seventh[x][y]=color[y];
@@ -32,7 +32,7 @@ void hex_writeOutmostCircle(uint8_t *color, neopixel_hex hex )
 
 }
 
-void hex_writeOuterCircle(uint8_t *color, neopixel_hex hex )
+void hex_writeOuterCircle(uint8_t *color, neopixel_hex *hex )
 {
 	uint8_t x,y;
 
@@ -54,23 +54,23 @@ void hex_writeOuterCircle(uint8_t *color, neopixel_hex hex )
 
 }
 
-void hex_writeInner_Circle(uint8_t *color, neopixel_hex hex )
+void hex_writeInner_Circle(uint8_t *color, neopixel_hex *hex )
 {
-	uint8_t x;
+	uint8_t x,y;
 	
 	for(y=0,x=2;y<3;y++)
 	{
-		hex->third[x]=color;
-		hex->sixth[x++]=color;
-		hex->third[x]=color;
-		hex->sixth[x]=color;
+		hex->third[x][y]=color[y];
+		hex->sixth[x++][y]=color[y];
+		hex->third[x][y]=color[y];
+		hex->sixth[x][y]=color[y];
 
-		hex->fouth[2]=color;
-		hex->fourth[4]=color;
+		hex->fourth[2][y]=color[y];
+		hex->fourth[4][y]=color[y];
 	}
 }
 
-void hex_write_Center(uint8_t *color, neopixel_hex hex )
+void hex_write_Center(uint8_t *color, neopixel_hex *hex )
 {
 	uint8_t y;
 
@@ -78,42 +78,44 @@ void hex_write_Center(uint8_t *color, neopixel_hex hex )
 	hex->fourth[3][y]=color[y];
 
 }
-
+/*
 void hex_writeClear( neopixel_hex hex )
 {
 	uint8_t x=0;
-
-	for(x=0;x<112;x++)
-	*hex=0;
+	
+	
+	for(x=0;x<HEX_TOTAL_LEDS;x++)
+	*hex->first++=0;
 
 }
-
-void hex_writeLeftmostDiagonal(uint8_t *color, neopixel_hex hex )
+*/
+void hex_writeLeftmostDiagonal(uint8_t *color, neopixel_hex *hex )
 {
 		uint8_t y;
 		
 	for(y=0;y<3;y++)
 	{
-		hex->first[0][y];
-		hex->second[0][y];
-		hex->third[0][y];
-		hex->fourth[0][y];
+		hex->first[0][y]=color[y];
+		hex->second[0][y]=color[y];
+		hex->third[0][y]=color[y];
+		hex->fourth[0][y]=color[y];
 	}
 }
 
-void hex_writeLefterDiagonal(uint8_t *color, neopixel_hex hex )
+void hex_writeLefterDiagonal(uint8_t *color, neopixel_hex *hex )
 {
 	uint8_t y;
 	for(y=0;y<3;y++)
 	{
-		hex->first[1][y];
-		hex->second[1][y];
-		hex->third[1][y];
-		hex->fourth[1][y];
-		hex->fifth[1][y];
+		hex->first[1][y]=color[y];
+		hex->second[1][y]=color[y];
+		hex->third[1][y]=color[y];
+		hex->fourth[1][y]=color[y];
+		hex->fifth[1][y]=color[y];
 	}
 }
 
+/*
 void hex_writeLeftDiagonal(uint8_t *color, neopixel_hex hex )
 {
 	uint8_t y;
@@ -145,11 +147,11 @@ void hex_writeLeftDiagonal(uint8_t *color, neopixel_hex hex )
 		hex->seventh[1][y];
 	}
 }
-
+*/
 
 
 //uint8_t hex_writeDiagonal(uint8_t *color, neopixel_hex hex, hex_direction direction, hex_side side, uint8_t row)
-uint8_t hex_writeDiagonal(uint8_t *color, neopixel_hex hex, hex_diagonal_combinations combo, uint8_t row)
+uint8_t hex_writeDiagonal(uint8_t *color, neopixel_hex *hex, hex_diagonal_combinations combo, uint8_t row)
 {
 	
 	//uint8_t function_lookup=direction+side;
@@ -162,13 +164,13 @@ uint8_t hex_writeDiagonal(uint8_t *color, neopixel_hex hex, hex_diagonal_combina
 	
 	if(combo)
 	{
-		status=hex_writeDiagonal_InTop_OutBottom(color,&hex,row);
+		status=hex_writeDiagonal_InTop_OutBottom(color,hex,row);
 		return status;
 	}
 	
 	else
 	{
-		status=hex_writeDiagonal_InBottom_OutTop(color,&hex,row);
+		status=hex_writeDiagonal_InBottom_OutTop(color,hex,row);
 		return status;
 	}
 	
@@ -197,7 +199,7 @@ uint8_t hex_writeDiagonal(uint8_t *color, neopixel_hex hex, hex_diagonal_combina
 	*/
 	
 }
-uint8_t hex_writeDiagonal_InTop_OutBottom(uint8_t *color, neopixel_hex hex, uint8_t row)
+uint8_t hex_writeDiagonal_InTop_OutBottom(uint8_t *color, neopixel_hex *hex, uint8_t row)
 {
 		int y;
 		
@@ -292,13 +294,14 @@ uint8_t hex_writeDiagonal_InTop_OutBottom(uint8_t *color, neopixel_hex hex, uint
 			break;
 			
 			default: return false;
-			
+		}
 			return true;
 }
 
-uint8_t hhex_writeDiagonal_InBottom_OutTop(uint8_t *color, neopixel_hex hex, uint8_t row)
+uint8_t hex_writeDiagonal_InBottom_OutTop(uint8_t *color, neopixel_hex *hex, uint8_t row)
 {
-	
+		uint8_t y;
+		
 		switch (row){
 			
 			case 1:
@@ -315,7 +318,7 @@ uint8_t hhex_writeDiagonal_InBottom_OutTop(uint8_t *color, neopixel_hex hex, uin
 			case 2:
 			for(y=0;y<3;y++)
 			{
-				hex->third[5][y]=color[y]
+				hex->third[5][y]=color[y];
 				hex->fourth[5][y]=color[y];
 				hex->fifth[4][y]=color[y];
 				hex->sixth[3][y]=color[y];
@@ -329,7 +332,7 @@ uint8_t hhex_writeDiagonal_InBottom_OutTop(uint8_t *color, neopixel_hex hex, uin
 			{
 
 				hex->second[4][y]=color[y];
-				hex->third[4][y]=color[y]
+				hex->third[4][y]=color[y];
 				hex->fourth[4][y]=color[y];
 				hex->fifth[3][y]=color[y];
 				hex->sixth[2][y]=color[y];
@@ -343,7 +346,7 @@ uint8_t hhex_writeDiagonal_InBottom_OutTop(uint8_t *color, neopixel_hex hex, uin
 			{
 				hex->first[3][y]=color[y];
 				hex->second[3][y]=color[y];
-				hex->third[3][y]=color[y]
+				hex->third[3][y]=color[y];
 				hex->fourth[3][y]=color[y];
 				hex->fifth[2][y]=color[y];
 				hex->sixth[1][y]=color[y];
@@ -391,79 +394,79 @@ uint8_t hhex_writeDiagonal_InBottom_OutTop(uint8_t *color, neopixel_hex hex, uin
 			break;
 			
 			default: return false;
-			
+		}
 			return true;
 	
 	
 }
 
-uint8_t hex_writeRow(uint8_t *color, neopixel_hex hex, uint8_t row)
+uint8_t  hex_writeRow(uint8_t *color, neopixel_hex *hex, uint8_t row)
 {
 	uint8_t x,y;
 	
-	switch (row){
-		
-		case 1:
-			
-			for(x=0;x<4;x++)
-			{
-				for(y=0;y<3;y++)
-				hex->first[x][y]=color[y];
-			}
-	
-
+	switch (row)
+	{
+		case 1:			
+		for(x=0;x<4;x++)
+		{
+			for(y=0;y<3;y++)
+			hex->first[x][y]=color[y];
+		}
 		break;
-		
+	
 		case 2:
-			
-			for(x=0;x<5;x++)
-			{
-				for(y=0;y<3;y++)				
-				hex->second[x][y]=color[y]
-		
-			}
+		for(x=0;x<5;x++)
+		{
+			for(y=0;y<3;y++)				
+			hex->second[x][y]=color[y];	
+		}
 		break;
 		
 		case 3:
-			for(x=0;x<6;x++)
-			{
-				for(y=0;y<3;y++)
-				hex->third[x][y]=color[y]	
-			}
+		for(x=0;x<6;x++)
+		{
+			for(y=0;y<3;y++)
+			hex->third[x][y]=color[y];	
+		}
 		break;
 
 		case 4:
-			for(x=0;x<7;x++)
-			{
-				for(y=0;y<3;y++)
-				hex->fourth[x][y]=color[y]
-			}
+		for(x=0;x<7;x++)
+		{
+			for(y=0;y<3;y++)
+			hex->fourth[x][y]=color[y];
+		}
 		break;
 		case 5:
-			for(x=0;x<6;x++)
-			{
-				for(y=0;y<3;y++)
-				hex->fifth[x][y]=color[y]
-			}
+		for(x=0;x<6;x++)
+		{
+			for(y=0;y<3;y++)
+			hex->fifth[x][y]=color[y];
+		}
 		break;
 		
 		case 6:
-			for(x=0;x<5;x++)
-			{
-				for(y=0;y<3;y++)
-				hex->sixth[x][y]=color[y]
-			}
+		for(x=0;x<5;x++)
+		{
+			for(y=0;y<3;y++)
+			hex->sixth[x][y]=color[y];
+		}
 		break;
 		
 		case 7:
-			for(x=0;x<4;x++)
-			{
-				for(y=0;y<3;y++)
-				hex->seventh[x][y]=color[y]
-			}
+		for(x=0;x<4;x++)
+		{
+			for(y=0;y<3;y++)
+			hex->seventh[x][y]=color[y];
+		}
+		break;
 		
-		default: return false;
+		default: 
+		return false;
 		
-		return true;
+	
+	}	
+		
+	return true;
 		
 }
